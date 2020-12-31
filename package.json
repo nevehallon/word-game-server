@@ -1,6 +1,9 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.15.3"
+  },
   "description": "",
   "main": "./js/server.js",
   "scripts": {
@@ -12,6 +15,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "helmet": "^4.3.1",
     "lodash": "^4.17.20",
     "trie-prefix-tree": "^1.5.1"
   },

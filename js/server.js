@@ -1,14 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 const { wordFinder, wordTrieStr, reverseWordTrieStr } = require("./wordFinder");
 
 const app = express();
-app.use(cors());
+app.use(helmet());
 
-// corsOptions = {
-//     origin: 'http://localhost:3001',
-//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
+corsOptions = {
+  origin: "https://nevehallon.github.io/word-game-client/",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 
 app.get("/wordFinder", (req, res, next) => {
   res.send({
@@ -23,5 +25,5 @@ app.get("/wordTrieStr", (req, res, next) => {
   });
 });
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+const PORT = (port = process.env.PORT || 80);
+app.listen(PORT, () => console.log(`Working on port ${PORT}`));
