@@ -7,7 +7,7 @@ const app = express();
 app.use(helmet());
 
 corsOptions = {
-  origin: "https://nevehallon.github.io/word-game-client/",
+  origin: "https://nevehallon.github.io/",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
