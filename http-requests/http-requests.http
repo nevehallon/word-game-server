@@ -1,6 +1,6 @@
-@path = http://localhost:3000
+@path = http://localhost:80
 
-GET {{path}}/wordFinder?letters=striead&numBlanks=0
+GET {{path}}/wordFinder?letters=aa&numBlanks=0
 ###
 GET {{path}}/wordTrieStr
 
