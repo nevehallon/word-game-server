@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const { wordFinder, wordTrieStr, reverseWordTrieStr } = require("./wordFinder");
+const { defineWordArr } = require("./defineWord");
 
 const app = express();
 app.use(helmet());
@@ -11,7 +12,8 @@ corsOptions = {
   origin: process.env.BASE_URL || "https://nevehallon.github.io",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors());
 
 app.get("/wordFinder", (req, res, next) => {
   res.send({
@@ -25,6 +27,14 @@ app.get("/wordTrieStr", (req, res, next) => {
     reverseWordTrieStr: reverseWordTrieStr,
   });
 });
+
+app.get("/defineWords", async (req, res) => {
+  let words = req.query.words.split(",");
+  res.send({
+    words: await defineWordArr(words),
+  });
+});
+
 app.all("*", (req, res) => {
   res.send("404: page not found");
 });

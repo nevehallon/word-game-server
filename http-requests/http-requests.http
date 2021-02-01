@@ -1,6 +1,8 @@
-@path = http://localhost:80
+@path = http://localhost:3000
 
 GET {{path}}/wordFinder?letters=aa&numBlanks=0
 ###
 GET {{path}}/wordTrieStr
+###
 
+GET {{path}}/defineWords?words=haste,fast
