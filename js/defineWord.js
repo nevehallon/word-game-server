@@ -23,26 +23,19 @@ axios
   })
   .catch(console.log);
 
-function customizer(objValue, srcValue) {
-  if (_.isArray(objValue)) {
-    return _.flattenDeep(objValue.concat(srcValue));
-  }
-  return _.flattenDeep(objValue ? [objValue, srcValue] : [srcValue]);
-}
-
 async function defineWordArr(words) {
   try {
     let list = [];
     for (let i = 0; i < words.length; i++) {
       const word = words[i];
-      let result = await axios.get(`${baseUrl}/${word}${capUrl}`);
-      let resultObj = {};
-      if (_.isArray(result.data.results)) {
-        resultObj[`${word}`] = result.data.results.reduce((acc, cur) => {
-          return _.mergeWith(acc, cur, customizer);
-        }, {});
-        list.push(resultObj);
-      }
+      let res = await axios.get(`${dictionary}/${word}`);
+      let $ = cheerio.load(res.data, { decodeEntities: false });
+
+      let script = $(`body script`).eq(0).html().replace("window.__NUXT__=", "");
+
+      let info = new Function("return " + script);
+
+      list.push(info().state.Filter);
     }
     return list;
   } catch (error) {
