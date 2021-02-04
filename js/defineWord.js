@@ -7,7 +7,7 @@ const axios = require("axios");
 let baseUrl = "http://api.wordnik.com/v4/word.json";
 
 baseUrl = process.env.baseUrl;
-let capUrl = process.env.capUrl;
+
 let dictionary = process.env.dictionary;
 
 axios
@@ -18,8 +18,6 @@ axios
     let script = $(`body script`).eq(0).html().replace("window.__NUXT__=", "");
 
     let fn = new Function("return " + script);
-
-    console.log(fn());
   })
   .catch(console.log);
 
