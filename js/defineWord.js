@@ -10,17 +10,6 @@ baseUrl = process.env.baseUrl;
 
 let dictionary = process.env.dictionary;
 
-axios
-  .get(`${dictionary}/hello`)
-  .then((res) => {
-    let $ = cheerio.load(res.data, { decodeEntities: false });
-
-    let script = $(`body script`).eq(0).html().replace("window.__NUXT__=", "");
-
-    let fn = new Function("return " + script);
-  })
-  .catch(console.log);
-
 async function defineWordArr(words) {
   try {
     let list = [];
