@@ -10,23 +10,36 @@ baseUrl = process.env.baseUrl;
 
 let dictionary = process.env.dictionary;
 
+async function getDef(word) {
+  try {
+    let res = await axios.get(`${dictionary}/${word}`);
+    let $ = cheerio.load(res.data, { decodeEntities: false });
+
+    let script = $(`body script`).eq(0).html();
+
+    script = script.replace("window.__NUXT__=", "");
+
+    let info = new Function("return " + script);
+
+    return info().state.Filter;
+  } catch (error) {
+    console.log("error 1");
+
+    return { definitions: [], headword: word };
+  }
+}
+
 async function defineWordArr(words) {
   try {
     let list = [];
-    for (let i = 0; i < words.length; i++) {
-      const word = words[i];
-      let res = await axios.get(`${dictionary}/${word}`);
-      let $ = cheerio.load(res.data, { decodeEntities: false });
+    for (const word of words) {
+      let res = await getDef(word);
 
-      let script = $(`body script`).eq(0).html().replace("window.__NUXT__=", "");
-
-      let info = new Function("return " + script);
-
-      list.push(info().state.Filter);
+      list.push(res);
     }
     return list;
   } catch (error) {
-    console.log(error);
+    console.log("error 2", error);
   }
 }
 
