@@ -12,37 +12,22 @@ let dictionary = process.env.dictionary;
 
 async function fallBackReq(word) {
   try {
-    let d = new Date();
-    d.setTime(d.getTime() + 364 * 24 * 60 * 60 * 1e3);
-    d = d.toUTCString();
-
     let options = JSON.parse(process.env.reqOptions);
-    options.headers.cookie = `visid_incap_1950811=5tpV2N91QE+u/j6WqvNsc9OfIGAAAAAAQUIPAAAAAAAyNFypVvHDOqb1P8fohqF2; expires=${d}; HttpOnly; path=/; Domain=.hasbro.com; incap_ses_254_1950811=Y1J6O589Wzdpyb9a7WOGA9OfIGAAAAAAWe2wfZ2CtdCheN7Hzy+5Pg==; path=/; Domain=.hasbro.com`;
-    // `incap_ses_254_1950811=a; Max-Age=0; path=/; expires=${d}; Domain=.hasbro.com`;
-    //expires=Mon, 07 Feb 2022 10:15:55 GMT
 
-    // let checkRes = await fetch(process.env.backUpBaseUrl, {
-    //   // ...JSON.parse(process.env.reqOptions),
-    //   ...options,
-    //   referrer: "https://scrabble.hasbro.com/en-us/",
-    //   method: "GET",
-    // });
+    let checkRes = await fetch(process.env.backUpBaseUrl, { ...options });
 
-    //  console.log(checkRes);
+    options.headers.cookie = checkRes.headers.get("set-cookie");
+    // console.log(options);
 
-    // let options = JSON.parse(process.env.reqOptions);
-    // options.headers.cookie = `incap_ses_254_1950811=a; Max-Age=0; path=/; expires=${d}; Domain=.hasbro.com`;
-
-    let res = await fetch(process.env.backUpBaseUrl + "tools", {
+    let res = await fetch(process.env.backUpBaseUrl + "tools#dictionary", {
       ...options,
       body: `dictWord=${word}`,
       method: "POST",
     });
     res = await res.text();
     let $ = cheerio.load(res, { decodeEntities: false });
-    // let test = $("body").text();
-    // console.log(test);
     let def = $(".word-definition").children().remove().end().text();
+    // console.log(def);
     if (
       def.includes("defined at merriam-webster.com") ||
       def.includes("Check out the spelling of your word and try again.")
