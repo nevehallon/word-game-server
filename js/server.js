@@ -29,7 +29,7 @@ app.get("/wordTrieStr", (req, res, next) => {
 });
 
 app.get("/defineWords", async (req, res) => {
-  let words = req.query.words.split(",");
+  let words = req.query.words.replace(/ */g, "").split(",");
   res.send({
     words: await defineWordArr(words),
   });
