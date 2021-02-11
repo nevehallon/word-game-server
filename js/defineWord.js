@@ -37,7 +37,7 @@ async function fallBackReq(word) {
 
     return { success: true, definitions: [{ txt: def.trim(), part: null, upvotes: 1000 }], headWord: word };
   } catch (error) {
-    console.log("error 2", error);
+    console.log("error 2", error, word);
     return { success: false, definitions: [{ text: "" }], headWord: word };
   }
 }
@@ -62,30 +62,39 @@ async function getDef(word) {
 
     return info().state.Filter;
   } catch (error) {
-    console.log("error 1", error);
+    console.log("error 1", error, word);
 
     return await fallBackReq(word);
   }
 }
 
 async function defineWordArr(words) {
+  let currentWord;
   try {
     let list = [];
     for (const word of words) {
+      currentWord = word;
       let res = await getDef(word);
 
       if (res?.success === false || res?.success === true) {
+        let { headword, definitions, pronunciation, origin, success } = res;
+        res = { headword, definitions, pronunciation, origin, success };
+
         list.push(res);
       } else {
         let fallBackDef = await fallBackReq(word);
         res?.definitions?.push(fallBackDef.definitions[0]);
+        res.headWord = word;
+        let { headword, definitions, pronunciation, origin, success } = res;
+        res = { headword, definitions, pronunciation, origin, success };
+
         list.push(res);
       }
     }
 
     return list;
   } catch (error) {
-    console.log("error 3", error);
+    console.log("error 3", error, currentWord);
   }
 }
 
