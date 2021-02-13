@@ -10,17 +10,45 @@ baseUrl = process.env.baseUrl;
 
 let dictionary = process.env.dictionary;
 
-async function fallBackReq(word) {
+let options = JSON.parse(process.env.reqOptions);
+
+let checkRes = { headers: { cookie: "" } };
+
+async function validateSources(word) {
+  const sources = [
+    `https://ssl.gstatic.com/dictionary/static/sounds/20200429/${word}_--1_us_3.mp3`,
+    `https://ssl.gstatic.com/dictionary/static/sounds/20200429/${word}--_3_rr.mp3`,
+    `https://ssl.gstatic.com/dictionary/static/sounds/20200429/${word}--_3.mp3`,
+    `https://ssl.gstatic.com/dictionary/static/sounds/20200429/${word}--_us_2rr.mp3`,
+    `https://ssl.gstatic.com/dictionary/static/sounds/20200429/${word}--_us_2.mp3`,
+    `https://ssl.gstatic.com/dictionary/static/sounds/20200429/${word}--_us_1rr.mp3`,
+    `https://ssl.gstatic.com/dictionary/static/sounds/20200429/${word}--_us_1.mp3`,
+    `https://cdn.yourdictionary.com/audio/en/${word}.mp3`,
+    `https://www.google.com/speech-api/v1/synthesize?text=${word}&enc=mpeg&lang=en-us&speed=0.4&client=lr-language-tts&use_google_only_voices=1`,
+  ];
   try {
-    let options = JSON.parse(process.env.reqOptions);
+    let validateSources = await Promise.all(
+      sources.map(async (source) => {
+        let res = await fetch(source);
+        if (res.status === 200) {
+          return source;
+        }
+        return;
+      })
+    );
 
-    let checkRes = await fetch(process.env.backUpBaseUrl, { ...options });
-
-    options.headers.cookie = checkRes.headers.get("set-cookie");
-    // console.log(options);
+    return validateSources.filter((item) => item !== undefined);
+  } catch (error) {
+    console.log("error 4 Src", error, word);
+  }
+}
+async function queryDictionary(word) {
+  try {
+    let queryOptions = { ...options };
+    queryOptions.headers.cookie = checkRes.headers.get("set-cookie");
 
     let res = await fetch(process.env.backUpBaseUrl + "tools#dictionary", {
-      ...options,
+      ...queryOptions,
       body: `dictWord=${word}`,
       method: "POST",
     });
@@ -37,8 +65,19 @@ async function fallBackReq(word) {
 
     return { success: true, definitions: [{ txt: def.trim(), part: null, upvotes: 1000 }], headWord: word };
   } catch (error) {
-    console.log("error 2", error, word);
+    console.log("error 2.1", error, word);
     return { success: false, definitions: [{ text: "" }], headWord: word };
+  }
+}
+
+async function fallBackReq(word) {
+  try {
+    checkRes = await fetch(process.env.backUpBaseUrl, { ...options });
+
+    return queryDictionary(word);
+  } catch (error) {
+    console.log("error 2.0", error, word);
+    return queryDictionary(word);
   }
 }
 
@@ -75,10 +114,11 @@ async function defineWordArr(words) {
     for (const word of words) {
       currentWord = word;
       let res = await getDef(word);
+      let audioSources = await validateSources(word);
 
       if (res?.success === false || res?.success === true) {
         let { headword, definitions, pronunciation, origin, success } = res;
-        res = { headword, definitions, pronunciation, origin, success };
+        res = { headword, definitions, pronunciation, origin, success, audioSources };
 
         list.push(res);
       } else {
@@ -86,7 +126,7 @@ async function defineWordArr(words) {
         res?.definitions?.push(fallBackDef.definitions[0]);
         res.headWord = word;
         let { headword, definitions, pronunciation, origin, success } = res;
-        res = { headword, definitions, pronunciation, origin, success };
+        res = { headword, definitions, pronunciation, origin, success, audioSources };
 
         list.push(res);
       }
