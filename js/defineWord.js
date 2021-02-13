@@ -118,6 +118,15 @@ async function defineWordArr(words) {
 
       if (res?.success === false || res?.success === true) {
         let { headword, definitions, pronunciation, origin, success } = res;
+        if (definitions) {
+          definitions = definitions
+            .sort((a, b) => (a.upvotes > b.upvotes ? -1 : 1))
+            .filter((_, i) => i < 5)
+            .map(({ txt, part, upvotes }) => ({ txt, part, upvotes }));
+        }
+        if (origin) {
+          origin = origin.filter((_, i) => i < 2).map(({ txt }) => ({ txt }));
+        }
         res = { headword, definitions, pronunciation, origin, success, audioSources };
 
         list.push(res);
@@ -126,6 +135,15 @@ async function defineWordArr(words) {
         res?.definitions?.push(fallBackDef.definitions[0]);
         res.headWord = word;
         let { headword, definitions, pronunciation, origin, success } = res;
+        if (definitions) {
+          definitions = definitions
+            .sort((a, b) => (a.upvotes > b.upvotes ? -1 : 1))
+            .filter((_, i) => i < 5)
+            .map(({ txt, part, upvotes }) => ({ txt, part, upvotes }));
+        }
+        if (origin) {
+          origin = origin.filter((_, i) => i < 2).map(({ txt }) => ({ txt }));
+        }
         res = { headword, definitions, pronunciation, origin, success, audioSources };
 
         list.push(res);
