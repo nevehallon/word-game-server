@@ -6,8 +6,6 @@ const fetch = require("node-fetch");
 
 let baseUrl = "http://api.wordnik.com/v4/word.json";
 
-baseUrl = process.env.baseUrl;
-
 let dictionary = process.env.dictionary;
 
 let options = JSON.parse(process.env.reqOptions);
