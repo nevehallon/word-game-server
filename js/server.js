@@ -6,7 +6,19 @@ const { wordFinder, wordTrieStr, reverseWordTrieStr } = require("./wordFinder");
 const { defineWordArr } = require("./defineWord");
 
 const app = express();
+const compression = require("compression");
 app.use(helmet());
+app.use(compression({ level: 6, filter: shouldCompress }));
+
+function shouldCompress(req, res) {
+  if (req.headers["x-no-compression"]) {
+    // don't compress responses with this request header
+    return false;
+  }
+
+  // fallback to standard filter function
+  return compression.filter(req, res);
+}
 
 corsOptions = {
   origin: process.env.BASE_URL || "https://nevehallon.github.io",
