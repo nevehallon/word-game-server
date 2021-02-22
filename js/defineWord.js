@@ -37,7 +37,7 @@ async function validateSources(word) {
 
     return validateSources.filter((item) => item !== undefined);
   } catch (error) {
-    console.log("error 4 Src", error, word);
+    // console.log("error 4 Src", error, word);
   }
 }
 async function queryDictionary(word) {
@@ -63,7 +63,7 @@ async function queryDictionary(word) {
 
     return { success: true, definitions: [{ txt: def.trim(), part: null, upvotes: 1000 }], headWord: word };
   } catch (error) {
-    console.log("error 2.1", error, word);
+    // console.log("error 2.1", error, word);
     return { success: false, definitions: [{ text: "" }], headWord: word };
   }
 }
@@ -74,7 +74,7 @@ async function fallBackReq(word) {
 
     return queryDictionary(word);
   } catch (error) {
-    console.log("error 2.0", error, word);
+    // console.log("error 2.0", error, word);
     return queryDictionary(word);
   }
 }
@@ -99,7 +99,7 @@ async function getDef(word) {
 
     return info().state.Filter;
   } catch (error) {
-    console.log("error 1", error, word);
+    // console.log("error 1", error, word);
 
     return await fallBackReq(word);
   }
@@ -150,7 +150,7 @@ async function defineWordArr(words) {
 
     return list;
   } catch (error) {
-    console.log("error 3", error, currentWord);
+    // console.log("error 3", error, currentWord);
   }
 }
 
