@@ -21,7 +21,7 @@ function shouldCompress(req, res) {
 }
 
 corsOptions = {
-  origin: process.env.BASE_URL || "https://nevehallon.github.io/word-game-V2/",
+  origin: process.env.BASE_URL || "https://nevehallon.github.io",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
