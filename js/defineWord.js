@@ -1,16 +1,28 @@
-require("dotenv").config();
-const _ = require("lodash");
-const cheerio = require("cheerio");
+require('dotenv').config();
+const _ = require('lodash');
+const cheerio = require('cheerio');
 
-const fetch = require("node-fetch");
+const fetch = require('node-fetch');
 
-let baseUrl = "http://api.wordnik.com/v4/word.json";
+let baseUrl = 'http://api.wordnik.com/v4/word.json';
 
 let dictionary = process.env.dictionary;
 
-let options = JSON.parse(process.env.reqOptions);
-
-let checkRes = { headers: { cookie: "" } };
+let options;
+try {
+  options = JSON?.parse?.(process.env.reqOptions);
+} catch (error) {
+  options = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+        '(KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
+    },
+    credentials: 'include',
+  };
+}
+let checkRes = { headers: { cookie: '' } };
 
 async function validateSources(word) {
   const sources = [
@@ -43,28 +55,28 @@ async function validateSources(word) {
 async function queryDictionary(word) {
   try {
     let queryOptions = { ...options };
-    queryOptions.headers.cookie = checkRes.headers.get("set-cookie");
+    queryOptions.headers.cookie = checkRes.headers.get('set-cookie');
 
-    let res = await fetch(process.env.backUpBaseUrl + "tools#dictionary", {
+    let res = await fetch(process.env.backUpBaseUrl + 'tools#dictionary', {
       ...queryOptions,
       body: `dictWord=${word}`,
-      method: "POST",
+      method: 'POST',
     });
     res = await res.text();
     let $ = cheerio.load(res, { decodeEntities: false });
-    let def = $(".word-definition").children().remove().end().text();
+    let def = $('.word-definition').children().remove().end().text();
     // console.log(def);
     if (
-      def.includes("defined at merriam-webster.com") ||
-      def.includes("Check out the spelling of your word and try again.")
+      def.includes('defined at merriam-webster.com') ||
+      def.includes('Check out the spelling of your word and try again.')
     ) {
-      return { success: false, definitions: [{ text: "" }], headWord: word };
+      return { success: false, definitions: [{ text: '' }], headWord: word };
     }
 
     return { success: true, definitions: [{ txt: def.trim(), part: null, upvotes: 1000 }], headWord: word };
   } catch (error) {
     // console.log("error 2.1", error, word);
-    return { success: false, definitions: [{ text: "" }], headWord: word };
+    return { success: false, definitions: [{ text: '' }], headWord: word };
   }
 }
 
@@ -88,12 +100,12 @@ async function getDef(word) {
 
     let script = $(`body script`).eq(0).html();
 
-    let hasDef = script.includes("window.__NUXT__=");
+    let hasDef = script.includes('window.__NUXT__=');
     if (!hasDef) return await fallBackReq(word);
 
-    script = script.replace("window.__NUXT__=", "");
+    script = script.replace('window.__NUXT__=', '');
 
-    let info = new Function("return " + script);
+    let info = new Function('return ' + script);
 
     if (!info().state.Filter.definitions.length) return await fallBackReq(word);
 
