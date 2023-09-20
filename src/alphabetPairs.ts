@@ -1,6 +1,6 @@
 let letters = "abcdefghijklmnopqrstuvwxyz";
 
-let result = [];
+let result: string[] = [];
 
 for(let letter of letters){
  for(let letter2 of letters){
@@ -10,4 +10,4 @@ for(let letter of letters){
  }
 }
 
-module.exports = { letters, result };
+export { letters, result };
