@@ -20,6 +20,7 @@ try {
 		credentials: 'include',
 	};
 }
+
 let checkRes: Record<string, any> | Response = { headers: { cookie: '' } };
 
 async function validateSources(word) {

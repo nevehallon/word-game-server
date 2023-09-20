@@ -3,8 +3,11 @@ import trie from "trie-prefix-tree";
 import fs from 'fs';
 
 import { letters as oneBlank, result as twoBlanks } from "./alphabetPairs";
+import path from "path";
 // import wordCsv from "./wordList";
-const wordCsv = fs.createReadStream('./wordList.csv')
+const wordCsv = fs.createReadStream(
+	path.resolve(__dirname, '../assets/wordList.csv')
+)
 // 187,632 words
 const wordList: string[] = []
 wordCsv.on('data', (chunk) => {
@@ -13,7 +16,10 @@ wordCsv.on('data', (chunk) => {
 
 // const reverseWordList = require("./reverseWordList");
 // 187,632 words
-const reverseWordCsv = fs.createReadStream('./reverseWordList.csv')
+const reverseWordCsv = fs.createReadStream(
+
+	path.resolve(__dirname, '../assets/reverseWordList.csv')
+)
 const reverseWordList: string[] = []
 reverseWordCsv.on('data', (chunk) => {
 	reverseWordList.push(chunk.toString())
@@ -22,7 +28,7 @@ reverseWordCsv.on('data', (chunk) => {
 
 const myTrie = trie(wordList); // currently 173,141 words
 
-function wordFinder(str:string, numBlanks?: number) {
+function wordFinder(str: string, numBlanks?: number) {
 	let result: string[] = [];
 	numBlanks == 2 ?
 		twoBlanks.forEach(blanks => result.push(...myTrie.getSubAnagrams(`${str}${blanks}`))) :
@@ -38,4 +44,4 @@ function wordFinder(str:string, numBlanks?: number) {
 const wordTrieStr = myTrie.dump() // currently 173,141 words
 const reverseWordTrieStr = trie(reverseWordList).dump()
 
-export { reverseWordTrieStr,wordFinder,wordTrieStr };
+export { reverseWordTrieStr, wordFinder, wordTrieStr };
