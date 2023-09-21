@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { wordFinder, wordTrieStr, reverseWordTrieStr } from '../wordFinder';
-import { defineWordArr } from '../defineWord';
+import { wordFinder, wordTrieStr, reverseWordTrieStr } from '../utils/wordFinder';
+import { defineWordArr } from '../utils/defineWord';
 
 const router = Router();
 

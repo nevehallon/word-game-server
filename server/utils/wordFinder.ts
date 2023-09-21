@@ -6,7 +6,7 @@ import { letters as oneBlank, result as twoBlanks } from "./alphabetPairs";
 import path from "path";
 // import wordCsv from "./wordList";
 const wordCsv = fs.createReadStream(
-	path.resolve(__dirname, '../assets/wordList.csv')
+	path.resolve(__dirname, '../../assets/wordList.csv')
 )
 // 187,632 words
 const wordList: string[] = []
@@ -18,7 +18,7 @@ wordCsv.on('data', (chunk) => {
 // 187,632 words
 const reverseWordCsv = fs.createReadStream(
 
-	path.resolve(__dirname, '../assets/reverseWordList.csv')
+	path.resolve(__dirname, '../../assets/reverseWordList.csv')
 )
 const reverseWordList: string[] = []
 reverseWordCsv.on('data', (chunk) => {
