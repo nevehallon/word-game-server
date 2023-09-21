@@ -4,21 +4,11 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { wordFinder, wordTrieStr, reverseWordTrieStr } from './wordFinder';
 import { defineWordArr } from './defineWord';
+import { useCompression } from './utils';
 
 const app = express();
-import compression from 'compression';
 app.use(helmet());
-app.use(compression({ level: 6, filter: shouldCompress }));
-
-function shouldCompress(req, res) {
-	if (req.headers['x-no-compression']) {
-		// don't compress responses with this request header
-		return false;
-	}
-
-	// fallback to standard filter function
-	return compression.filter(req, res);
-}
+app.use(useCompression());
 
 const corsOptions = {
 	origin: process.env.BASE_URL || 'https://nevehallon.github.io',
