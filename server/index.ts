@@ -1,15 +1,10 @@
 require('dotenv').config();
 import express from 'express';
-import helmet from 'helmet';
 import { wordFinder, wordTrieStr, reverseWordTrieStr } from './wordFinder';
 import { defineWordArr } from './defineWord';
-import { useCompression } from './middlewares/compression';
-import { useCors } from './middlewares/cors';
+import { useMiddleWares } from './middlewares';
 
-const app = express();
-app.use(helmet());
-app.use(useCompression());
-app.use(useCors());
+const app = useMiddleWares(express());
 
 
 
@@ -46,5 +41,9 @@ app.get('/', async (req, res) => {
 app.all('*', (req, res) => {
 	res.send('404: page not found');
 });
+
 const PORT = process.env.PORT || 80
-app.listen(PORT, () => console.log(`Working on port ${PORT}`));
+app.listen(
+	PORT,
+	() => console.log(`Working on port ${PORT}`)
+);
