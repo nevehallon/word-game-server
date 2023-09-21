@@ -1,25 +1,21 @@
 require('dotenv').config();
 import express from 'express';
-import cors from 'cors';
 import helmet from 'helmet';
 import { wordFinder, wordTrieStr, reverseWordTrieStr } from './wordFinder';
 import { defineWordArr } from './defineWord';
-import { useCompression } from './utils';
+import { useCompression } from './middlewares/compression';
+import { useCors } from './middlewares/cors';
 
 const app = express();
 app.use(helmet());
 app.use(useCompression());
+app.use(useCors());
 
-const corsOptions = {
-	origin: process.env.BASE_URL || 'https://nevehallon.github.io',
-	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors(corsOptions));
+
 
 app.get('/wordFinder', (
 	req,
 	res,
-	next
 ) => {
 	res.send({
 		wordsFound: wordFinder(
