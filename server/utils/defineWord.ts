@@ -1,6 +1,6 @@
 require('dotenv').config();
-const _ = require('lodash');
-const cheerio = require('cheerio');
+import _ from 'lodash';
+import cheerio from 'cheerio';
 
 let baseUrl = 'http://api.wordnik.com/v4/word.json';
 
@@ -100,10 +100,10 @@ async function getDef(word: string) {
 
 		let script = $(`body script`).eq(0).html();
 
-		let hasDef = script.includes(nuxtWindowStr);
+		let hasDef = script?.includes(nuxtWindowStr);
 		if (!hasDef) return fallBackReq(word);
 
-		script = script.replace(nuxtWindowStr, '');
+		script = script?.replace(nuxtWindowStr, '') || '';
 
 		let info = new Function('return ' + script);
 

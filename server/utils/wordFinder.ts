@@ -4,9 +4,14 @@ import fs from 'fs';
 
 import { letters as oneBlank, result as twoBlanks } from "./alphabetPairs";
 import path from "path";
-// import wordCsv from "./wordList";
+
+const assetsPath = path.resolve(__dirname, '../../assets/')
+const getAsset = (filename: string) => (
+	path.resolve(assetsPath, filename)
+)
+
 const wordCsv = fs.createReadStream(
-	path.resolve(__dirname, '../../assets/wordList.csv')
+	getAsset('wordList.csv')
 )
 // 187,632 words
 const wordList: string[] = []
@@ -17,8 +22,7 @@ wordCsv.on('data', (chunk) => {
 // const reverseWordList = require("./reverseWordList");
 // 187,632 words
 const reverseWordCsv = fs.createReadStream(
-
-	path.resolve(__dirname, '../../assets/reverseWordList.csv')
+	getAsset('reverseWordList.csv')
 )
 const reverseWordList: string[] = []
 reverseWordCsv.on('data', (chunk) => {

@@ -2,16 +2,21 @@
 	"name": "server",
 	"version": "1.0.0",
 	"engines": {
-		"node": "14.15.3"
+		"node": "20.7.0"
 	},
 	"description": "",
 	"scripts": {
-		"dev": "nodemon ./server/index.ts",
+		"dev": "nodemon ./server",
 		"start": "tsc && node ./dist"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
+	"imports": {
+		"#utils": "./server/utils/index.ts",
+		"#routes": "./server/routes/index.ts",
+		"#middleware": "./server/middleware/index.ts"
+	},
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.12",
 		"compression": "^1.7.4",
@@ -31,5 +36,8 @@
 		"nodemon": "^3.0.1",
 		"ts-node": "^10.9.1",
 		"typescript": "^5.2.2"
+	},
+	"volta": {
+		"node": "20.7.0"
 	}
 }
